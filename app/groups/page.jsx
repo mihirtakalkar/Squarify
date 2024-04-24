@@ -1,54 +1,88 @@
 "use client";
-import React, { useState } from 'react';
 
-export default function Groups() {
+
+import { useSession } from 'next-auth/react';
+import { useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
+export default function GroupsPage() {
+    const { status, data: session } = useSession();
     const [groupName, setGroupName] = useState('');
     const [members, setMembers] = useState('');
 
+    const notifySuccess = () => toast("Group created successfully!");
+    const notifyFailure = () => toast("Failed to create group!");
+    const notifyError = () => toast('An error occurred while creating the group');
+
+
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const data = { groupName, members: members.split(',') };
-        const JSONdata = JSON.stringify(data);
-        const endpoint = '/api/group/route';
+        const data = { admin_email: session?.user?.email, name: groupName, members: String(members).split(',') };
+        // console.log('admin_email ', session?.user?.email);
+        // console.log("Group name ", data.name);
+        // console.log("Members ", String(members).split(',') );
 
-        const options = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSONdata,
-        };
 
-        const response = await fetch(endpoint, options);
-        const result = await response.json();
-        alert(`Is group added: ${result ? 'Yes' : 'No'}`);
+        try {
+            const response = await fetch('http://localhost:3000/api/group', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (response.ok) {
+                console.log('Group created successfully!');
+                // console.log(toast);
+                notifySuccess();
+                // toast.success('Group created successfully!', { position: toast.POSITION.TOP_CENTER });
+            } else {
+                console.error('Failed to create group');
+                notifyFailure();
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            notifyError();
+        }
     };
 
+    // Render loading state if session status is loading
+    if (status === 'loading') return <div>Loading...</div>;
+
+    // If user is not authenticated, render message to sign in
+    if (!session) return <div>Please sign in to create a group.</div>;
+
     return (
-        <form onSubmit={handleSubmit} className="flex flex-col p-4">
-            <div className="mb-4">
-                <label htmlFor="groupName" className="block text-sm font-medium text-gray-700">Group Name:</label>
-                <input
-                    type="text"
-                    id="groupName"
-                    name="groupName"
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                    value={groupName}
-                    onChange={(e) => setGroupName(e.target.value)}
-                />
-            </div>
-            <div className="mb-6">
-                <label htmlFor="members" className="block text-sm font-medium text-gray-700">Members (comma-separated):</label>
-                <input
-                    type="text"
-                    id="members"
-                    name="members"
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                    value={members}
-                    onChange={(e) => setMembers(e.target.value)}
-                />
-            </div>
-            <button type="submit" className="self-center px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">Create Group</button>
-        </form>
+        <div className="max-w-md mx-auto mt-8 p-6 bg-white shadow-md rounded-md">
+            <ToastContainer />
+
+            <h1 className="text-2xl font-semibold mb-4">Create a Group</h1>
+            <form onSubmit={handleSubmit}>
+                <div className="mb-4">
+                    <label htmlFor="groupName" className="block text-sm font-medium text-gray-700">Group Name:</label>
+                    <input
+                        type="text"
+                        id="groupName"
+                        value={groupName}
+                        onChange={(e) => setGroupName(e.target.value)}
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    />
+                </div>
+                <div className="mb-4">
+                    <label htmlFor="members" className="block text-sm font-medium text-gray-700">Members (comma-separated):</label>
+                    <input
+                        type="text"
+                        id="members"
+                        value={members}
+                        onChange={(e) => setMembers(e.target.value)}
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    />
+                </div>
+                <button type="submit" className="w-full bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600">Create Group</button>
+            </form>
+        </div>
     );
 }
