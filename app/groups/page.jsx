@@ -1,5 +1,6 @@
-"use client";
+//Add Groups Page
 
+"use client";
 
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';

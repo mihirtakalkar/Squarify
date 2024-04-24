@@ -1,31 +1,100 @@
 // Transaction Page
 'use client'
-import React, { useState } from 'react';
 
-const Transaction = () => {
+import { useSession } from 'next-auth/react';
+import React, { useState, useCallback, useEffect} from 'react';
+
+const TransactionPage = () => {
   // State variables to store the values of the text fields
+  const { status, data: session } = useSession();
   const [price, setPrice] = useState('');
   const [payee, setPayee] = useState('');
   const [name, setName] = useState('');
+  const [userGroups, setUserGroups] = useState([]);
+  const [selectedGroup, setSelectedGroup] = useState('');
 
+  const fetchUserGroups = useCallback(async () => {
+    try {
+      if (session) {
+        const response = await fetch(`http://localhost:3000/api/group?admin_email=${encodeURIComponent(session?.user?.email)}`, {
+          method: 'GET',
+        });
+        if (response.ok) {
+          const groupsData = await response.json();
+          setUserGroups(groupsData.groups);
+        } else {
+          console.error('Failed to fetch user groups.');
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching user groups:', error);
+    }
+  }, [session]);
+  
+
+  useEffect(() => {
+    fetchUserGroups();
+  }, [session, fetchUserGroups]);
+  
+  useEffect(() => {
+    if (session) {
+      fetchUserGroups();
+    }
+  }, [session, fetchUserGroups]);
+  
   // Function to handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Do something with the form data, such as sending it to a server
-    console.log('Price:', price);
-    console.log('Payee:', payee);
-    console.log('Name:', name);
-    // Reset the form fields
-    setPrice('');
-    setPayee('');
-    setName('');
-  };
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const data = { group_name: selectedGroup, payer: session?.user?.email, amount: price, description: name };
+    console.log('payer ', session?.user?.email);
+    console.log("amount ", price);
+    console.log("description", name );
+
+    try {
+        const response = await fetch('http://localhost:3000/api/transaction', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+
+        if (response.ok) {
+            console.log('Transaction succeeded!');
+            // console.log(toast);
+            //notifySuccess();
+            // toast.success('Group created successfully!', { position: toast.POSITION.TOP_CENTER });
+        } else {
+            console.error('Failed to initiate payment.');
+            //notifyFailure();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        //notifyError();
+    }
+};
 
   return (
     <div>
       <h1 className="text-2xl mb-4">Add Transaction</h1>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
+          <label htmlFor="group" className="block text-sm font-medium leading-6 text-gray-900">
+            Select Group
+          </label>
+          <select
+            id="group"
+            className="form-select mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            value={selectedGroup}
+            onChange={(e) => setSelectedGroup(e.target.value)}
+          >
+            <option value="">Select a group</option>
+            {userGroups.map((group) => (
+              <option key={group.id} value={group.id}>
+                {group.name}
+              </option>
+            ))}
+          </select>
           <label htmlFor="price" className="block text-sm font-medium leading-6 text-gray-900">Price</label>
           <div className="relative mt-2 rounded-md shadow-sm">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -39,14 +108,6 @@ const Transaction = () => {
               onChange={(e) => setPrice(e.target.value)}
               placeholder="0.00"
             />
-            <div className="absolute inset-y-0 right-0 flex items-center">
-              <label htmlFor="currency" className="sr-only">Currency</label>
-              <select id="currency" name="currency" className="h-full rounded-md border-0 bg-transparent py-0 pl-2 pr-7 text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm">
-                <option>USD</option>
-                <option>CAD</option>
-                <option>EUR</option>
-              </select>
-            </div>
           </div>
         </div>
         {/* Payee */}
@@ -77,4 +138,4 @@ const Transaction = () => {
   );
 };
 
-export default Transaction;
+export default TransactionPage;
