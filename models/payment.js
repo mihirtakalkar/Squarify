@@ -3,22 +3,31 @@ import mongoose, { Schema, models } from "mongoose";
 const paymentSchema = new Schema(
   {
     group_name: {
-        type: String, 
-        required: true
+      type: String,
+      required: true
     },
     payer: {
       type: String,
       required: true,
     },
+    members: [{
+      email: {
+        type: String,
+        required: true,
+      },
+      splitAmount: {
+        type: Number,
+        default: 0,
+      },
+    }],
     amount: {
       type: String,
       required: true,
     },
-    description:
-      {
-        type: String,
-        required: true,
-      },
+    description: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );

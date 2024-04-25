@@ -20,7 +20,7 @@ export async function GET(request) {
     // Find groups where the specified email is in the members array
     const userGroups = await Group.find({ admin_email: adminEmail });
     // Return the user groups as JSON response
-    console.log(userGroups);
+    //console.log(userGroups);
     return NextResponse.json({ groups: userGroups }, { status: 200 });
   } catch (error) {
     console.error('Error fetching user groups:', error);
