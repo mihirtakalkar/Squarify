@@ -16,7 +16,7 @@ export default function SelfGroupsPage() {
         event.preventDefault();
         // Assuming members should be an array of strings and not a single string
         const membersArray = members.split(',').map(member => member.trim());  
-        const data = { admin_email: session?.user?.email, name: groupName, members: membersArray };
+        const data = { admin_email: session?.user?.email, name: groupName, newMembers: membersArray };
 
         try {
             const response = await fetch('http://localhost:3000/api/group/', { // Adjust the URL to the correct API endpoint for updates
@@ -70,7 +70,7 @@ export default function SelfGroupsPage() {
                         className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                     />
                 </div>
-                <button type="submit" className="w-full bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600">Create Group</button>
+                <button type="submit" className="w-full bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600">Add Members</button>
             </form>
         </div>
     );

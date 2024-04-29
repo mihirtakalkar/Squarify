@@ -20,11 +20,10 @@ export default function GroupsPage() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const data = { admin_email: session?.user?.email, name: groupName, members: String(members).split(',') };
+        const data = { admin_email: session?.user?.email, name: groupName, newMembers: String(members).split(',') };
         // console.log('admin_email ', session?.user?.email);
         // console.log("Group name ", data.name);
         // console.log("Members ", String(members).split(',') );
-
 
         try {
             const response = await fetch('http://localhost:3000/api/group', {
