@@ -29,3 +29,24 @@ export async function GET(request) {
   }
 }
 
+export async function PUT(request) {
+  const { name, admin_email, newMembers } = await request.json();
+
+  try {
+      const updatedGroup = await Group.findOneAndUpdate(
+          { name }, 
+          { 
+              $push: { members: { newMembers } }, // Append newMembers to the members array
+          },
+      );
+
+      if (!updatedGroup) {
+          return NextResponse.json({ error: 'Group not found' }, { status: 404 });
+      }
+
+      return NextResponse.json({ message: "Group Updated", group: updatedGroup }, { status: 200 });
+  } catch (error) {
+      console.error("Error updating group:", error);
+      return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}

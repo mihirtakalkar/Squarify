@@ -14,36 +14,35 @@ export default function SelfGroupsPage() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const data = { admin_email: session?.user?.email, name: groupName, members: String(members).split(',') };
+        // Assuming members should be an array of strings and not a single string
+        const membersArray = members.split(',').map(member => member.trim());  
+        const data = { admin_email: session?.user?.email, name: groupName, members: membersArray };
 
         try {
-            const response = await fetch('http://localhost:3000/api/group', {
-                method: 'POST',
+            const response = await fetch('http://localhost:3000/api/group/', { // Adjust the URL to the correct API endpoint for updates
+                method: 'PUT', // Change to PUT if updating
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(data),
             });
-
+    
             if (response.ok) {
-                console.log('Group created successfully!');
-                // console.log(toast);
-                //notifySuccess();
-                // toast.success('Group created successfully!', { position: toast.POSITION.TOP_CENTER });
+                console.log('Group updated successfully!');
+                // toast.success('Group updated successfully!', { position: toast.POSITION.TOP_CENTER });
             } else {
-                console.error('Failed to create group');
-                //notifyFailure();
+                const errorData = await response.json();  // Assuming the server might send back a message
+                console.error('Failed to update group:', errorData.message);
+                // toast.error(`Failed to update group: ${errorData.message}`, { position: toast.POSITION.TOP_CENTER });
             }
         } catch (error) {
-            console.error('Error:', error);
-            //notifyError();
+            console.error('Error updating group:', error);
+            // toast.error(`Error updating group: ${error.message}`, { position: toast.POSITION.TOP_CENTER });
         }
     };
-
-    // Render loading state if session status is loading
+    
     if (status === 'loading') return <div>Loading...</div>;
 
-    // If user is not authenticated, render message to sign in
     if (!session) return <div>Please sign in to create a group.</div>;
 
     return (

@@ -80,7 +80,6 @@ const TransactionPage = () => {
     const groupId = e.target.value;
     setSelectedGroup(groupId);
 
-    // Assuming `userGroups` includes all necessary group data
     const group = userGroups.find((g) => g._id === groupId);
     setGroupDetails(group);
   };
