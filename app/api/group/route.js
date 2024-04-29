@@ -11,16 +11,17 @@ export async function POST(request) {
 }
 
 export async function GET(request) {
-  // Parse the URL string to extract query parameters
-  const url = new URL(request.url);
-  const adminEmail = url.searchParams.get('admin_email');
   await connectMongoDB();
-  
+
   try {
-    // Find groups where the specified email is in the members array
+    const url = new URL(request.url);
+    const adminEmail = url.searchParams.get('admin_email');
+
+    if (!adminEmail) {
+      return NextResponse.json({ error: 'Admin email is required' }, { status: 400 });
+    }
+
     const userGroups = await Group.find({ admin_email: adminEmail });
-    // Return the user groups as JSON response
-    //console.log(userGroups);
     return NextResponse.json({ groups: userGroups }, { status: 200 });
   } catch (error) {
     console.error('Error fetching user groups:', error);

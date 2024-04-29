@@ -2,11 +2,10 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-
 import { useSession } from "next-auth/react";
 
 
-const AddGroupBtn = React.forwardRef(({ onClick, href }, ref) => {
+const AddSelfBtn = React.forwardRef(({ onClick, href }, ref) => {
   const { status, data: session } = useSession();
   if (status === "authenticated") {
     return (
@@ -19,7 +18,7 @@ const AddGroupBtn = React.forwardRef(({ onClick, href }, ref) => {
         whileHover={{ scale: 1.1 }}
         transition={{ type: "spring", stiffness: 300 }}
       >
-        Add Group
+        Add Yourself to a Group
         </button>
       //</motion.a>
     );
@@ -29,4 +28,4 @@ const AddGroupBtn = React.forwardRef(({ onClick, href }, ref) => {
   );
 });
 
-export default AddGroupBtn;
+export default AddSelfBtn;

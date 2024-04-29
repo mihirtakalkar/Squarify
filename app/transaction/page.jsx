@@ -8,30 +8,62 @@ const TransactionPage = () => {
   // State variables to store the values of the text fields
   const { status, data: session } = useSession();
   const [price, setPrice] = useState("");
-  const [payee, setPayee] = useState("");
-  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
   const [userGroups, setUserGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState("");
-  const [splitAmounts, setSplitAmounts] = useState({});
-  const [updatedMembers, setUpdatedMembers] = useState([]);
+  const [groupDetails, setGroupDetails] = useState(null);
+  const [memberSplits, setMemberSplits] = useState({});
+  const showSplitButton = selectedGroup && price > 0;
+
+  const handleMemberSplitChange = (event, email) => {
+    const { value } = event.target;
+    setMemberSplits((prevSplits) => ({
+      ...prevSplits,
+      [email]: Number(value),
+    }));
+  };
+
+  const handleSplitEvenly = () => {
+    if (!groupDetails || groupDetails.members.length === 0) {
+      console.error("No group selected or group has no members.");
+      return;
+    }
+
+    const totalAmount = parseFloat(price);
+    if (isNaN(totalAmount)) {
+      console.error("Invalid total amount.");
+      return;
+    }
+
+    const splitAmount = totalAmount / groupDetails.members.length;
+    const newSplits = groupDetails.members.reduce((acc, memberEmail) => {
+      acc[memberEmail] = splitAmount; // Set even split for each member
+      return acc;
+    }, {});
+
+    setMemberSplits(newSplits);
+  };
 
   const fetchUserGroups = useCallback(async () => {
+    if (!session?.user?.email) {
+      console.error("No session or user email available.");
+      return;
+    }
+
     try {
-      if (session) {
-        const response = await fetch(
-          `http://localhost:3000/api/group?admin_email=${encodeURIComponent(
-            session?.user?.email
-          )}`,
-          {
-            method: "GET",
-          }
+      const url = `http://localhost:3000/api/group?admin_email=${encodeURIComponent(
+        session.user.email
+      )}`;
+      const response = await fetch(url, { method: "GET" });
+
+      if (response.ok) {
+        const groupsData = await response.json();
+        setUserGroups(groupsData.groups);
+      } else {
+        console.error(
+          "Failed to fetch user groups: HTTP status",
+          response.status
         );
-        if (response.ok) {
-          const groupsData = await response.json();
-          setUserGroups(groupsData.groups);
-        } else {
-          console.error("Failed to fetch user groups.");
-        }
       }
     } catch (error) {
       console.error("Error fetching user groups:", error);
@@ -39,52 +71,38 @@ const TransactionPage = () => {
   }, [session]);
 
   useEffect(() => {
-    fetchUserGroups();
-  }, [session, fetchUserGroups]);
-
-  useEffect(() => {
     if (session) {
       fetchUserGroups();
     }
   }, [session, fetchUserGroups]);
 
-  const handleSplitAmountChange = (email, value) => {
-  
-    // Won't work since this happens each time the handler is called
-    const updatedMembers = userGroups
-      .find((group) => group._id === selectedGroup)
-      ?.members.map((member) => ({
-        member,
-        splitAmount: member === email ? parseFloat(value) : (splitAmounts[member] || 0)
-      }));
-  
-    // Update the splitAmounts state
-    setSplitAmounts(updatedMembers.reduce((acc, curr) => {
-      acc[curr.member] = curr.splitAmount;
-      return acc;
-    }, {}));
+  const handleGroupChange = (e) => {
+    const groupId = e.target.value;
+    setSelectedGroup(groupId);
+
+    // Assuming `userGroups` includes all necessary group data
+    const group = userGroups.find((g) => g._id === groupId);
+    setGroupDetails(group);
   };
-
-
 
   // Function to handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const membersData = groupDetails.members.map((email) => ({
+      email,
+      splitAmount: memberSplits[email] || 0, // Default to 0 if not specified
+    }));
+
     const selectedGroupData = userGroups.find(
       (group) => group._id === selectedGroup
     );
-    //Burner code to set all splitAmounts to 0
-    // const newMembers = selectedGroupData ? selectedGroupData.members.map(member => ({
-    //   email: member.email,
-    //   splitAmount: 0  // Use split amount from state, default to 0 if not set
-    // })) : [];
 
     const data = {
-      group_name: selectedGroup,
+      group_name: selectedGroupData,
       payer: session?.user?.email,
-      members: updatedMembers,
+      members: membersData,
       amount: price,
-      description: name,
+      description: description,
     };
 
     try {
@@ -98,16 +116,14 @@ const TransactionPage = () => {
 
       if (response.ok) {
         console.log("Transaction succeeded!");
-        // console.log(toast);
-        //notifySuccess();
-        // toast.success('Group created successfully!', { position: toast.POSITION.TOP_CENTER });
+        // Further success handling
       } else {
         console.error("Failed to initiate payment.");
-        //notifyFailure();
+        // Error handling
       }
     } catch (error) {
       console.error("Error:", error);
-      //notifyError();
+      // Error handling
     }
   };
 
@@ -127,7 +143,7 @@ const TransactionPage = () => {
               id="group"
               className="form-select mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               value={selectedGroup}
-              onChange={(e) => setSelectedGroup(e.target.value)}
+              onChange={handleGroupChange}
             >
               <option value="">Select a group</option>
               {userGroups.map((group) => (
@@ -136,37 +152,6 @@ const TransactionPage = () => {
                 </option>
               ))}
             </select>
-
-            {selectedGroup && (
-              <div>
-                <h3>
-                  Members of{" "}
-                  {
-                    userGroups.find((group) => group._id === selectedGroup)
-                      ?.name
-                  }
-                </h3>
-                <ul>
-                  {userGroups
-                    .find((group) => group._id === selectedGroup)
-                    ?.members.map((member) => (
-                      <li key={member.email}>
-                        {member.email}:
-                        <input
-                          type="string"
-                          value={member.splitAmount}
-                          onChange={(e) =>
-                            handleSplitAmountChange(
-                              member.email,
-                              e.target.value
-                            )
-                          }
-                        />
-                      </li>
-                    ))}
-                </ul>
-              </div>
-            )}
           </div>
           <label
             htmlFor="price"
@@ -187,37 +172,55 @@ const TransactionPage = () => {
               placeholder="0.00"
             />
           </div>
+          {groupDetails &&
+            groupDetails.members.map((memberEmail, index) => (
+              <div key={index} className="mb-4">
+                <label
+                  htmlFor={`member-email-${index}`}
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Member: {memberEmail}
+                </label>
+                <label
+                  htmlFor={`member-split-${index}`}
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Amount ($)
+                </label>
+                <input
+                  type="number"
+                  id={`member-split-${index}`}
+                  value={memberSplits[memberEmail] || ""}
+                  placeholder="Enter amount"
+                  className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  onChange={(e) => handleMemberSplitChange(e, memberEmail)}
+                />
+              </div>
+            ))}
         </div>
-        {/* Payee */}
+        {showSplitButton && (
+          <button
+            type="button" // Ensure this does not submit the form
+            onClick={handleSplitEvenly}
+            className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600"
+          >
+            Split Evenly
+          </button>
+        )}
+        {/* Description */}
         <div className="mb-4 rounded-md shadow-sm">
           <label
-            htmlFor="payee"
+            htmlFor="description"
             className="block text-sm font-medium leading-6 text-gray-900"
           >
-            Payee
+            Description
           </label>
           <input
             type="text"
-            id="payee"
+            id="description"
             className="form-input mt-1 block w-full rounded-md border-1 border-gray-300 shadow-sm"
-            value={payee}
-            onChange={(e) => setPayee(e.target.value)}
-          />
-        </div>
-        {/* Name */}
-        <div className="mb-4 rounded-md shadow-sm">
-          <label
-            htmlFor="name"
-            className="block text-sm font-medium leading-6 text-gray-900"
-          >
-            Name
-          </label>
-          <input
-            type="text"
-            id="name"
-            className="form-input mt-1 block w-full rounded-md border-1 border-gray-300 shadow-sm"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
           />
         </div>
         <button
