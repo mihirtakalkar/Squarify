@@ -9,14 +9,14 @@ import 'react-toastify/dist/ReactToastify.css';
 
 export default function SelfGroupsPage() {
     const { status, data: session } = useSession();
-    const [groupName, setGroupName] = useState('');
+    const [groupId, setGroupId] = useState('');
     const [members, setMembers] = useState('');
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         // Assuming members should be an array of strings and not a single string
         const membersArray = members.split(',').map(member => member.trim());  
-        const data = { admin_email: session?.user?.email, name: groupName, newMembers: membersArray };
+        const data = { admin_email: session?.user?.email, id: groupId, newMembers: membersArray };
 
         try {
             const response = await fetch('http://localhost:3000/api/group/', { // Adjust the URL to the correct API endpoint for updates
@@ -51,12 +51,12 @@ export default function SelfGroupsPage() {
             <h1 className="text-2xl font-semibold mb-4">Add Members to Group</h1>
             <form onSubmit={handleSubmit}>
                 <div className="mb-4">
-                    <label htmlFor="groupName" className="block text-sm font-medium text-gray-700">Group Name:</label>
+                    <label htmlFor="groupID" className="block text-sm font-medium text-gray-700">Group ID:</label>
                     <input
                         type="text"
-                        id="groupName"
-                        value={groupName}
-                        onChange={(e) => setGroupName(e.target.value)}
+                        id="groupID"
+                        value={groupId}
+                        onChange={(e) => setGroupId(e.target.value)}
                         className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                     />
                 </div>
