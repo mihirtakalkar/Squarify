@@ -7,14 +7,13 @@ import User from "@/models/user";
 
 export default function Home() {
   return (
-    <div className="flex items-center justify-center h-screen -mt-24 gap-6">
-      <UserInfo />
-      <Link href="/groups" passHref>
-        <AddGroupBtn />
-      </Link>
-      <Link href="/selfgroup" passHref>
-        <AddSelfBtn />
-      </Link>
+    <div className="bg-gray-50 h-screen flex items-center justify-center">
+      <div className="text-center p-12 bg-white shadow-xl rounded-lg">
+        <h1 className="text-4xl font-bold text-gray-900 mb-4">Squarify</h1>
+        <p className="text-lg text-gray-600">
+          Web app to track expenses - as a group. Easily manage owed dues and view past events using custom groups.
+        </p>
+      </div>
     </div>
   );  
 }

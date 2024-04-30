@@ -2,6 +2,7 @@ import { connectMongoDB } from "@/lib/mongodb";
 import User from "@/models/user";
 import NextAuth from "next-auth/next";
 import GoogleProvider from "next-auth/providers/google";
+import { signOut } from "next-auth/react";
 
 const authOptions = {
   providers: [
@@ -40,6 +41,13 @@ const authOptions = {
       }
 
       return user;
+    },
+    async redirect({ url, baseUrl }) {
+      return baseUrl + "/user"
+    },
+    async signOut({ url, baseUrl }) {
+      // Always redirect to the home page after signing out
+      return baseUrl;
     },
   },
 };

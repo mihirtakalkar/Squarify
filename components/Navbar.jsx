@@ -18,7 +18,7 @@ export default function Navbar() {
               </button>
             </Link>
         <button
-          onClick={() => signOut()}
+          onClick={() => signOut({ callbackUrl: '/', redirect:true })}
           className="bg-slate-900 text-white px-6 py-2 rounded-md"
         >
           Sign Out
