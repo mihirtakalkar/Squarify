@@ -1,5 +1,5 @@
-Squarify:
-Web app to track group expenses.
+## Squarify
+Web app to track expenses - as a group. Easily manage owed dues and view past events using custom groups.
 
 
 This application was built using [Next.js](https://nextjs.org/).
