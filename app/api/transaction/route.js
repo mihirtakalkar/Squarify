@@ -8,3 +8,8 @@ export async function POST(request) {
   await Payment.create({ group_name, payer, members, amount, description });
   return NextResponse.json({ message: "Payment Registered" }, { status: 201 });
 }
+
+export async function GET(request) {
+  await connectMongoDB();
+  
+}

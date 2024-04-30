@@ -11,7 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 export default function GroupsPage() {
     const { status, data: session } = useSession();
     const [groupName, setGroupName] = useState('');
-    const [members, setMembers] = useState('');
+    const [newMembers, setMembers] = useState('');
 
     const notifySuccess = () => toast("Group created successfully!");
     const notifyFailure = () => toast("Failed to create group!");
@@ -20,7 +20,7 @@ export default function GroupsPage() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const data = { admin_email: session?.user?.email, name: groupName, newMembers: String(members).split(',') };
+        const data = { admin_email: session?.user?.email, name: groupName, members: String(newMembers).split(',') };
         // console.log('admin_email ', session?.user?.email);
         // console.log("Group name ", data.name);
         // console.log("Members ", String(members).split(',') );
@@ -76,7 +76,7 @@ export default function GroupsPage() {
                     <input
                         type="text"
                         id="members"
-                        value={members}
+                        value={newMembers}
                         onChange={(e) => setMembers(e.target.value)}
                         className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                     />

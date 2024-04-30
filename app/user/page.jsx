@@ -42,9 +42,12 @@ export default function UserPage() {
           {groups.map((group) => (
             <li key={group._id} className="p-2">
               <Link href={`/${group._id}`}>
-                <label className="text-blue-500 hover:text-blue-700">
+                <button className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600">
                   {group.name}
-                </label>
+                </button>
+                {/* <label className="text-blue-500 hover:text-blue-700">
+                  {group.name}
+                </label> */}
               </Link>
             </li>
           ))}
