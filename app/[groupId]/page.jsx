@@ -45,7 +45,7 @@ const GroupPage = () => {
 
   if (!group || !transactions) return <p>Loading details...</p>;
   return (
-    <div className="p-4">
+    <div className="p-4 max-w-3xl mx-auto">
       <h1 className="text-xl font-bold">{group.name}</h1>
       <h1>Group ID: {groupId}</h1>
       <p>Admin: {group.admin_email}</p>

@@ -140,6 +140,7 @@ const TransactionPage = () => {
   };
 
   return (
+    <div className="max-w-3xl mx-auto">
     <div>
       <h1 className="text-2xl mb-4">Add Transaction</h1>
       <form onSubmit={handleSubmit}>
@@ -245,6 +246,7 @@ const TransactionPage = () => {
           Submit
         </button>
       </form>
+    </div>
     </div>
   );
 };
