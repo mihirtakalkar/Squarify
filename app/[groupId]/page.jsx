@@ -68,7 +68,7 @@ const GroupPage = () => {
                 className="p-4 mb-4 bg-white shadow rounded-lg flex flex-col md:flex-row"
               >
                 <div className="flex-1">
-                  <p className="text-lg font-semibold">
+                  <p className="text-lg font-semibold text-gray-700">
                     Amount: {transaction.amount}
                   </p>
                   <p className="text-md text-gray-700">
@@ -94,7 +94,7 @@ const GroupPage = () => {
                     ))}
                   </ul>
                 </div>
-                <div className="flex-1 max-w-xs">
+                <div className="flex-1 max-w-xs content-center">
                   {" "}
                   <img
                     src={`https://maps.googleapis.com/maps/api/staticmap?center=${transaction.lat},${transaction.long}&zoom=17&size=400x400&scale=2&maptype=roadmap&markers=color:red%7C${transaction.lat},${transaction.long}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`}

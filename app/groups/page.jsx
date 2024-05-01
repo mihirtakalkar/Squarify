@@ -59,7 +59,7 @@ export default function GroupsPage() {
         <div className="max-w-md mx-auto mt-8 p-6 bg-white shadow-md rounded-md">
             <ToastContainer />
 
-            <h1 className="text-2xl font-semibold mb-4">Create a Group</h1>
+            <h1 className="text-2xl font-semibold mb-4 text-black">Create a Group</h1>
             <form onSubmit={handleSubmit}>
                 <div className="mb-4">
                     <label htmlFor="groupName" className="block text-sm font-medium text-gray-700">Group Name:</label>

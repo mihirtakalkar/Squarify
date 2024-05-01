@@ -10,7 +10,6 @@ const AddGroupBtn = React.forwardRef(({ onClick, href }, ref) => {
   const { status, data: session } = useSession();
   if (status === "authenticated") {
     return (
-      //<motion.a
       <Button
         href={href}
         onClick={onClick}
@@ -21,7 +20,6 @@ const AddGroupBtn = React.forwardRef(({ onClick, href }, ref) => {
       >
         Add Group
         </Button>
-      //</motion.a>
     );
   }
   return (

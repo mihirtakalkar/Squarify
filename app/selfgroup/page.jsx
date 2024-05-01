@@ -48,7 +48,7 @@ export default function SelfGroupsPage() {
     return (
         <div className="max-w-md mx-auto mt-8 p-6 bg-white shadow-md rounded-md">
             <ToastContainer />
-            <h1 className="text-2xl font-semibold mb-4">Add Members to Group</h1>
+            <h1 className="text-2xl font-semibold mb-4 text-black">Add Members to Group</h1>
             <form onSubmit={handleSubmit}>
                 <div className="mb-4">
                     <label htmlFor="groupID" className="block text-sm font-medium text-gray-700">Group ID:</label>

@@ -166,7 +166,7 @@ const TransactionPage = () => {
                   ))}
                 </select>
               </div>
-              <h1>Price</h1>
+              <h1 className="pt-0.5">Price</h1>
               <div className="relative mt-2 rounded-md shadow-sm">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                   <span className="text-gray-500 sm:text-sm">$</span>
@@ -182,18 +182,11 @@ const TransactionPage = () => {
               </div>
               {groupDetails &&
                 groupDetails.members.map((memberEmail, index) => (
-                  <div key={index} className="mb-4">
+                  <div key={index} className="mb-4 mt-2">
                     <label
                       htmlFor={`member-email-${index}`}
-                      //className="block text-sm font-medium leading-6 text-gray-900"
                     >
                       Member: {memberEmail}
-                    </label>
-                    <label
-                      htmlFor={`member-split-${index}`}
-                      className="block text-sm font-medium leading-6 text-gray-900"
-                    >
-                      Amount ($)
                     </label>
                     <Input
                       type="number"
