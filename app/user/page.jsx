@@ -32,7 +32,7 @@ export default function UserPage() {
     <div class="absolute top-0 z-[-2] h-screen w-screen bg-neutral-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]">
       <div className="flex flex-col items-center justify-center h-screen gap-6">
         <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-          Welcome, {session?.user?.name}
+          Welcome, {session?.user?.name} 
         </h1>
         {/* <UserInfo /> */}
         <div className="flex flex-row gap-6">

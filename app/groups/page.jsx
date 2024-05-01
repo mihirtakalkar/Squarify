@@ -56,9 +56,9 @@ export default function GroupsPage() {
     if (!session) return <div>Please sign in to create a group.</div>;
 
     return (
-        <div className="max-w-md mx-auto mt-8 p-6 bg-white shadow-md rounded-md">
+        <div class="absolute top-0 z-[-2] h-screen w-screen bg-neutral-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]"> 
+        <div className="max-w-md mx-auto mt-24 p-6 bg-white shadow-md rounded-md">
             <ToastContainer />
-
             <h1 className="text-2xl font-semibold mb-4 text-black">Create a Group</h1>
             <form onSubmit={handleSubmit}>
                 <div className="mb-4">
@@ -83,6 +83,7 @@ export default function GroupsPage() {
                 </div>
                 <button type="submit" className="w-full bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600">Create Group</button>
             </form>
+        </div>
         </div>
     );
 }
