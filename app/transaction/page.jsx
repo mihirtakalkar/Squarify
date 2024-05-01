@@ -1,6 +1,7 @@
 // Transaction Page
 "use client";
 
+import LocationSearchInput from "@/components/LocationInput";
 import { useSession } from "next-auth/react";
 import React, { useState, useCallback, useEffect } from "react";
 
@@ -13,6 +14,9 @@ const TransactionPage = () => {
   const [selectedGroup, setSelectedGroup] = useState("");
   const [groupDetails, setGroupDetails] = useState(null);
   const [memberSplits, setMemberSplits] = useState({});
+  const [locationData, setLocation] = useState('');
+  const [latData, setLat] = useState('');
+  const [longData, setLong] = useState('');
   const showSplitButton = selectedGroup && price > 0;
 
   const handleMemberSplitChange = (event, email) => {
@@ -84,6 +88,12 @@ const TransactionPage = () => {
     setGroupDetails(group);
   };
 
+  const handleLocationSelect = (locationData) => {
+    setLocation(locationData.address);
+    setLat(locationData.lat.toString()); // Convert to string if necessary
+    setLong(locationData.lng.toString()); // Convert to string if necessary
+  };
+
   // Function to handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -102,6 +112,9 @@ const TransactionPage = () => {
       members: membersData,
       amount: price,
       description: description,
+      location: locationData,
+      lat: latData,
+      long: longData,
     };
 
     try {
@@ -221,6 +234,9 @@ const TransactionPage = () => {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
+        </div>
+        <div>
+          <LocationSearchInput onLocationSelect={handleLocationSelect} />
         </div>
         <button
           type="submit"

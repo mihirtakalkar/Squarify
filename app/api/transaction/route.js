@@ -3,9 +3,9 @@ import Payment from "@/models/payment";
 import { NextResponse } from "next/server";
 
 export async function POST(request) {
-  const { group_name, payer, members, amount, description } = await request.json();
+  const { group_name, payer, members, amount, description, location, lat, long } = await request.json();
   await connectMongoDB();
-  await Payment.create({ group_name, payer, members, amount, description });
+  await Payment.create({ group_name, payer, members, amount, description, location, lat, long });
   return NextResponse.json({ message: "Payment Registered" }, { status: 201 });
 }
 

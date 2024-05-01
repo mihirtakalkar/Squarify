@@ -4,6 +4,8 @@ import React from 'react';
 import AddGroupBtn from "@/components/AddGroupBtn";
 import AddSelfBtn from '@/components/AddSelfBtn';
 import User from "@/models/user";
+import LocationInput from "@/components/LocationInput";
+import LocationSearchInput from "@/components/LocationInput";
 
 export default function Home() {
   return (

@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { Image } from "next/image";
 
 const GroupPage = () => {
   const [groupId, setGroupId] = useState(null);
@@ -59,30 +60,43 @@ const GroupPage = () => {
           transactions.map((transaction) => (
             <div
               key={transaction._id}
-              className="p-4 mb-4 bg-white shadow rounded-lg"
+              className="p-4 mb-4 bg-white shadow rounded-lg flex flex-col md:flex-row"
             >
-              <p className="text-lg font-semibold">
-                Amount: {transaction.amount}
-              </p>
-              <p className="text-md text-gray-700">
-                Description: {transaction.description}
-              </p>
-              <p className="text-md text-gray-700">
-                Payer: {transaction.payer}
-              </p>
-              <ul className="mt-2 list-none">
-                <h3 className="font-semibold text-gray-900">
-                  Members and their splits:
-                </h3>
-                {transaction.members.map((member, index) => (
-                  <li key={index} className="mb-2">
-                    <p className="text-gray-600">Email: {member.email}</p>
-                    <p className="text-gray-600">
-                      Split Amount: ${member.splitAmount.toFixed(2)}
-                    </p>
-                  </li>
-                ))}
-              </ul>
+              <div className="flex-1">
+                <p className="text-lg font-semibold">
+                  Amount: {transaction.amount}
+                </p>
+                <p className="text-md text-gray-700">
+                  Description: {transaction.description}
+                </p>
+                <p className="text-md text-gray-700">
+                  Payer: {transaction.payer}
+                </p>
+                <p className="text-md text-gray-700">
+                  Location: {transaction.location}
+                </p>
+                <ul className="mt-2 list-none">
+                  <h3 className="font-semibold text-gray-900">
+                    Members and their splits:
+                  </h3>
+                  {transaction.members.map((member, index) => (
+                    <li key={index} className="mb-2">
+                      <p className="text-gray-600">Email: {member.email}</p>
+                      <p className="text-gray-600">
+                        Split Amount: ${member.splitAmount.toFixed(2)}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="flex-1 max-w-xs">
+                {" "}
+                <img
+                  src={`https://maps.googleapis.com/maps/api/staticmap?center=${transaction.lat},${transaction.long}&zoom=17&size=400x400&scale=2&maptype=roadmap&markers=color:red%7C${transaction.lat},${transaction.long}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`}
+                  alt="Location Map"
+                  style={{ width: "100%", height: "auto" }}
+                />
+              </div>
             </div>
           ))
         ) : (

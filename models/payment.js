@@ -4,22 +4,24 @@ const paymentSchema = new Schema(
   {
     group_name: {
       type: String,
-      required: true
+      required: true,
     },
     payer: {
       type: String,
       required: true,
     },
-    members: [{
-      email: {
-        type: String,
-        required: true,
+    members: [
+      {
+        email: {
+          type: String,
+          required: true,
+        },
+        splitAmount: {
+          type: Number,
+          default: 0,
+        },
       },
-      splitAmount: {
-        type: Number,
-        default: 0,
-      },
-    }],
+    ],
     amount: {
       type: String,
       required: true,
@@ -28,6 +30,18 @@ const paymentSchema = new Schema(
       type: String,
       required: true,
     },
+    location: {
+      type: String,
+      required: true,
+    },
+    lat: {
+      type: String,
+      required: true,
+    },
+    long: {
+      type: String,
+      required: true,
+    }
   },
   { timestamps: true }
 );
