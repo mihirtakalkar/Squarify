@@ -45,64 +45,70 @@ const GroupPage = () => {
 
   if (!group || !transactions) return <p>Loading details...</p>;
   return (
-    <div className="p-4 max-w-3xl mx-auto">
-      <h1 className="text-xl font-bold">{group.name}</h1>
-      <h1>Group ID: {groupId}</h1>
-      <p>Admin: {group.admin_email}</p>
-      <ul>
-        <h2 className="font-semibold">Members:</h2>
-        {group.members &&
-          group.members.map((member) => <li key={member}>{member}</li>)}
-      </ul>
-      <h2 className="font-semibold">Transactions:</h2>
-      <ul>
-        {transactions.length > 0 ? (
-          transactions.map((transaction) => (
-            <div
-              key={transaction._id}
-              className="p-4 mb-4 bg-white shadow rounded-lg flex flex-col md:flex-row"
-            >
-              <div className="flex-1">
-                <p className="text-lg font-semibold">
-                  Amount: {transaction.amount}
-                </p>
-                <p className="text-md text-gray-700">
-                  Description: {transaction.description}
-                </p>
-                <p className="text-md text-gray-700">
-                  Payer: {transaction.payer}
-                </p>
-                <p className="text-md text-gray-700">
-                  Location: {transaction.location}
-                </p>
-                <ul className="mt-2 list-none">
-                  <h3 className="font-semibold text-gray-900">
-                    Members and their splits:
-                  </h3>
-                  {transaction.members.map((member, index) => (
-                    <li key={index} className="mb-2">
-                      <p className="text-gray-600">Email: {member.email}</p>
-                      <p className="text-gray-600">
-                        Split Amount: ${member.splitAmount.toFixed(2)}
-                      </p>
-                    </li>
-                  ))}
-                </ul>
+    <div class="absolute top-0 z-[-2] h-screen w-screen bg-neutral-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]">
+      <div className="mt-20 max-w-3xl mx-auto text-center">
+        <h1 className="p-10 scroll-m-20 text-3xl font-extrabold tracking-tight lg:text-5xl text-center">
+          {group.name}
+        </h1>
+        <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
+          Group ID: {groupId}
+        </h4>
+        <p>Admin: {group.admin_email}</p>
+        <ul>
+          <h2 className="font-semibold">Members:</h2>
+          {group.members &&
+            group.members.map((member) => <li key={member}>{member}</li>)}
+        </ul>
+        <h2 className="font-semibold">Transactions:</h2>
+        <ul>
+          {transactions.length > 0 ? (
+            transactions.map((transaction) => (
+              <div
+                key={transaction._id}
+                className="p-4 mb-4 bg-white shadow rounded-lg flex flex-col md:flex-row"
+              >
+                <div className="flex-1">
+                  <p className="text-lg font-semibold">
+                    Amount: {transaction.amount}
+                  </p>
+                  <p className="text-md text-gray-700">
+                    Description: {transaction.description}
+                  </p>
+                  <p className="text-md text-gray-700">
+                    Payer: {transaction.payer}
+                  </p>
+                  <p className="text-md text-gray-700">
+                    Location: {transaction.location}
+                  </p>
+                  <ul className="mt-2 list-none">
+                    <h3 className="font-semibold text-gray-900">
+                      Members and their splits:
+                    </h3>
+                    {transaction.members.map((member, index) => (
+                      <li key={index} className="mb-2">
+                        <p className="text-gray-600">Email: {member.email}</p>
+                        <p className="text-gray-600">
+                          Split Amount: ${member.splitAmount.toFixed(2)}
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="flex-1 max-w-xs">
+                  {" "}
+                  <img
+                    src={`https://maps.googleapis.com/maps/api/staticmap?center=${transaction.lat},${transaction.long}&zoom=17&size=400x400&scale=2&maptype=roadmap&markers=color:red%7C${transaction.lat},${transaction.long}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`}
+                    alt="Location Map"
+                    style={{ width: "100%", height: "auto" }}
+                  />
+                </div>
               </div>
-              <div className="flex-1 max-w-xs">
-                {" "}
-                <img
-                  src={`https://maps.googleapis.com/maps/api/staticmap?center=${transaction.lat},${transaction.long}&zoom=17&size=400x400&scale=2&maptype=roadmap&markers=color:red%7C${transaction.lat},${transaction.long}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`}
-                  alt="Location Map"
-                  style={{ width: "100%", height: "auto" }}
-                />
-              </div>
-            </div>
-          ))
-        ) : (
-          <p>No transactions found.</p>
-        )}
-      </ul>
+            ))
+          ) : (
+            <p>No transactions found.</p>
+          )}
+        </ul>
+      </div>
     </div>
   );
 };

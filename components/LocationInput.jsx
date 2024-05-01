@@ -1,6 +1,7 @@
 'use client'
 import React, { useRef, useEffect, useState } from 'react';
 import useGoogleMapsScript from '@/app/hooks/useGoogleMapsScript';
+import { Input } from './ui/input';
 
 const LocationSearchInput = ({ onLocationSelect }) => {
     const inputRef = useRef(null);
@@ -25,7 +26,7 @@ const LocationSearchInput = ({ onLocationSelect }) => {
         });
     }, [isScriptLoaded, onLocationSelect]);
 
-    return <input ref={inputRef} type="text" placeholder="Enter a location" />;
+    return <Input ref={inputRef} type="text" placeholder="Enter a location" />;
 };
 
 

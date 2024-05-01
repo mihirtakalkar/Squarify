@@ -6,6 +6,7 @@ import AddGroupBtn from "@/components/AddGroupBtn";
 import AddSelfBtn from "@/components/AddSelfBtn";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { Button } from "@/components/ui/button";
 
 export default function UserPage() {
   const { data: session } = useSession();
@@ -28,23 +29,30 @@ export default function UserPage() {
   }, [session]);
 
   return (
+<div class="absolute top-0 z-[-2] h-screen w-screen bg-neutral-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]">
     <div className="flex flex-col items-center justify-center h-screen gap-6">
-      <UserInfo />
+       <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+        Welcome, {session?.user?.name}
+      </h1>
+      {/* <UserInfo /> */}
+      <div className="flex flex-row gap-6">
       <Link href="/groups" passHref>
         <AddGroupBtn />
       </Link>
       <Link href="/selfgroup" passHref>
         <AddSelfBtn />
       </Link>
+      </div>
       <div className="w-full max-w-4xl p-4">
-        <h2 className="text-lg font-bold">Your Groups:</h2>
+      <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
+         Your Groups:</h3>
         <ul>
           {groups.map((group) => (
             <li key={group._id} className="p-2">
               <Link href={`/${group._id}`}>
-                <button className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600">
+                <Button >
                   {group.name}
-                </button>
+                </Button>
                 {/* <label className="text-blue-500 hover:text-blue-700">
                   {group.name}
                 </label> */}
@@ -53,6 +61,7 @@ export default function UserPage() {
           ))}
         </ul>
       </div>
+    </div>
     </div>
   );
 }

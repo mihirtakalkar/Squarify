@@ -2,6 +2,7 @@ import Navbar from "@/components/Navbar";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { NextAuthProvider } from "./Providers";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,13 +16,15 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         <NextAuthProvider>
-          <Navbar />
-          <div>
-            {children}
-          </div>
+          <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          >
+            <Navbar />
+            <div>{children}</div>
+          </ThemeProvider>
         </NextAuthProvider>
       </body>
     </html>
   );
 }
-

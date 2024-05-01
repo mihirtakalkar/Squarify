@@ -4,6 +4,8 @@
 import LocationSearchInput from "@/components/LocationInput";
 import { useSession } from "next-auth/react";
 import React, { useState, useCallback, useEffect } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 const TransactionPage = () => {
   // State variables to store the values of the text fields
@@ -14,9 +16,9 @@ const TransactionPage = () => {
   const [selectedGroup, setSelectedGroup] = useState("");
   const [groupDetails, setGroupDetails] = useState(null);
   const [memberSplits, setMemberSplits] = useState({});
-  const [locationData, setLocation] = useState('');
-  const [latData, setLat] = useState('');
-  const [longData, setLong] = useState('');
+  const [locationData, setLocation] = useState("");
+  const [latData, setLat] = useState("");
+  const [longData, setLong] = useState("");
   const showSplitButton = selectedGroup && price > 0;
 
   const handleMemberSplitChange = (event, email) => {
@@ -140,113 +142,101 @@ const TransactionPage = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto">
-    <div>
-      <h1 className="text-2xl mb-4">Add Transaction</h1>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label
-            htmlFor="group"
-            className="block text-sm font-medium leading-6 text-gray-900"
-          >
-            Select Group
-          </label>
-          <div>
-            <select
-              id="group"
-              className="form-select mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              value={selectedGroup}
-              onChange={handleGroupChange}
-            >
-              <option value="">Select a group</option>
-              {userGroups.map((group) => (
-                <option key={group._id} value={group._id}>
-                  {group.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <label
-            htmlFor="price"
-            className="block text-sm font-medium leading-6 text-gray-900"
-          >
-            Price
-          </label>
-          <div className="relative mt-2 rounded-md shadow-sm">
-            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-              <span className="text-gray-500 sm:text-sm">$</span>
-            </div>
-            <input
-              type="text"
-              id="price"
-              className="block w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              placeholder="0.00"
-            />
-          </div>
-          {groupDetails &&
-            groupDetails.members.map((memberEmail, index) => (
-              <div key={index} className="mb-4">
-                <label
-                  htmlFor={`member-email-${index}`}
-                  className="block text-sm font-medium leading-6 text-gray-900"
+    <div class="absolute top-0 z-[-2] h-screen w-screen bg-neutral-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]">
+      <div className="mt-20 max-w-3xl mx-auto">
+        <div>
+          <h2 className="p-10 scroll-m-20 text-3xl font-extrabold tracking-tight lg:text-5xl text-center">
+            Add Transaction
+          </h2>
+          <form onSubmit={handleSubmit}>
+            <div className="mb-4">
+              <h1>Select Group</h1>
+              <div>
+                <select
+                  id="group"
+                  className="form-select mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  value={selectedGroup}
+                  onChange={handleGroupChange}
                 >
-                  Member: {memberEmail}
-                </label>
-                <label
-                  htmlFor={`member-split-${index}`}
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Amount ($)
-                </label>
-                <input
-                  type="number"
-                  id={`member-split-${index}`}
-                  value={memberSplits[memberEmail] || ""}
-                  placeholder="Enter amount"
-                  className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  onChange={(e) => handleMemberSplitChange(e, memberEmail)}
+                  <option value="">Select a group</option>
+                  {userGroups.map((group) => (
+                    <option key={group._id} value={group._id}>
+                      {group.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <h1>Price</h1>
+              <div className="relative mt-2 rounded-md shadow-sm">
+                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                  <span className="text-gray-500 sm:text-sm">$</span>
+                </div>
+                <Input
+                  type="text"
+                  id="price"
+                  className="block w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                  placeholder="0.00"
                 />
               </div>
-            ))}
+              {groupDetails &&
+                groupDetails.members.map((memberEmail, index) => (
+                  <div key={index} className="mb-4">
+                    <label
+                      htmlFor={`member-email-${index}`}
+                      //className="block text-sm font-medium leading-6 text-gray-900"
+                    >
+                      Member: {memberEmail}
+                    </label>
+                    <label
+                      htmlFor={`member-split-${index}`}
+                      className="block text-sm font-medium leading-6 text-gray-900"
+                    >
+                      Amount ($)
+                    </label>
+                    <Input
+                      type="number"
+                      id={`member-split-${index}`}
+                      value={memberSplits[memberEmail] || ""}
+                      placeholder="Enter amount"
+                      // className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      onChange={(e) => handleMemberSplitChange(e, memberEmail)}
+                    />
+                  </div>
+                ))}
+            </div>
+            {showSplitButton && (
+              <Button
+                type="button" // Ensure this does not submit the form
+                onClick={handleSplitEvenly}
+                className="mt-2 px-4 py-2 rounded-md shadow hover:bg-blue-600"
+              >
+                Split Evenly
+              </Button>
+            )}
+            {/* Description */}
+            <div className="mb-4 rounded-md shadow-sm">
+              <h1>Description</h1>
+              <Input
+                type="text"
+                id="description"
+                placeholder="Enter description"
+                // className="form-input mt-1 block w-full rounded-md border-1 border-gray-300 shadow-sm"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </div>
+            <h1>Location</h1>
+            <div>
+              <LocationSearchInput onLocationSelect={handleLocationSelect} />
+            </div>
+            <Button type="submit" className="mt-4">
+              Submit
+            </Button>
+          </form>
         </div>
-        {showSplitButton && (
-          <button
-            type="button" // Ensure this does not submit the form
-            onClick={handleSplitEvenly}
-            className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600"
-          >
-            Split Evenly
-          </button>
-        )}
-        {/* Description */}
-        <div className="mb-4 rounded-md shadow-sm">
-          <label
-            htmlFor="description"
-            className="block text-sm font-medium leading-6 text-gray-900"
-          >
-            Description
-          </label>
-          <input
-            type="text"
-            id="description"
-            className="form-input mt-1 block w-full rounded-md border-1 border-gray-300 shadow-sm"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </div>
-        <div>
-          <LocationSearchInput onLocationSelect={handleLocationSelect} />
-        </div>
-        <button
-          type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Submit
-        </button>
-      </form>
-    </div>
+      </div>
     </div>
   );
 };
