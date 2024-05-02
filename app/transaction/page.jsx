@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import React, { useState, useCallback, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import {
   Select,
   SelectContent,
@@ -29,6 +30,12 @@ const TransactionPage = () => {
   const [latData, setLat] = useState("");
   const [longData, setLong] = useState("");
   const showSplitButton = selectedGroup && price > 0;
+  const notifySuccess1 = () => toast.success("Found groups!");
+  const notifyFailure1 = () => toast("Failed to fetch groups.");
+  const notifyError1 = () => toast('An error occurred while fetching the group.');
+  const notifySuccess2 = () => toast.success("Transaction saved!");
+  const notifyFailure2 = () => toast("Failed to save transaction!");
+  const notifyError2 = () => toast('An error occurred while saving the transaction.');
 
   const handleMemberSplitChange = (event, email) => {
     const { value } = event.target;
@@ -74,14 +81,17 @@ const TransactionPage = () => {
       if (response.ok) {
         const groupsData = await response.json();
         setUserGroups(groupsData.groups);
+        //notifySuccess1();
       } else {
         console.error(
           "Failed to fetch user groups: HTTP status",
           response.status
         );
+        notifyFailure1();
       }
     } catch (error) {
       console.error("Error fetching user groups:", error);
+      notifyError1();
     }
   }, [session]);
 
@@ -140,13 +150,16 @@ const TransactionPage = () => {
       if (response.ok) {
         console.log("Transaction succeeded!");
         // Further success handling
+        notifySuccess2();
       } else {
         console.error("Failed to initiate payment.");
         // Error handling
+        notifyFailure2();
       }
     } catch (error) {
       console.error("Error:", error);
       // Error handling
+      notifyError2();
     }
   };
 

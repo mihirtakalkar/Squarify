@@ -33,12 +33,14 @@ export default function Navbar() {
               >
                 Manage Groups
               </Link>
-              <button
-                onClick={() => signOut({ callbackUrl: "/"})}
-                className="bg-destructive text-destructive-foreground px-6 py-2 rounded-md hover:bg-destructive transition-colors"
-              >
-                Sign Out
-              </button>
+              <Link href="/">
+                <button
+                  onClick={() => signOut({callbackUrl: '/'})}
+                  className="bg-destructive text-destructive-foreground px-6 py-2 rounded-md hover:bg-destructive transition-colors"
+                >
+                  Sign Out
+                </button>
+              </Link>
               <img
                 className="rounded-full"
                 src={session?.user?.image}
