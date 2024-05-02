@@ -6,6 +6,15 @@ import { useSession } from "next-auth/react";
 import React, { useState, useCallback, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const TransactionPage = () => {
   // State variables to store the values of the text fields
@@ -82,8 +91,8 @@ const TransactionPage = () => {
     }
   }, [session, fetchUserGroups]);
 
-  const handleGroupChange = (e) => {
-    const groupId = e.target.value;
+  const handleGroupChange = (newValue) => {
+    const groupId = newValue;
     setSelectedGroup(groupId);
 
     const group = userGroups.find((g) => g._id === groupId);
@@ -152,7 +161,7 @@ const TransactionPage = () => {
             <div className="mb-4">
               <h1>Select Group</h1>
               <div>
-                <select
+                {/* <select
                   id="group"
                   className="form-select mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   value={selectedGroup}
@@ -164,17 +173,34 @@ const TransactionPage = () => {
                       {group.name}
                     </option>
                   ))}
-                </select>
+                </select> */}
+                <Select
+                  value={selectedGroup}
+                  onValueChange={handleGroupChange}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a group" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {userGroups.map((group) => (
+                        <SelectItem key={group._id} value={group._id}>
+                          {group.name}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
               </div>
               <h1 className="pt-0.5">Price</h1>
-              <div className="relative mt-2 rounded-md shadow-sm">
+              <div className="relative mt-2 rounded-md">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                   <span className="text-gray-500 sm:text-sm">$</span>
                 </div>
                 <Input
                   type="text"
                   id="price"
-                  className="block w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 pl-7 pr-20ring-1  placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
                   placeholder="0.00"
@@ -183,9 +209,7 @@ const TransactionPage = () => {
               {groupDetails &&
                 groupDetails.members.map((memberEmail, index) => (
                   <div key={index} className="mb-4 mt-2">
-                    <label
-                      htmlFor={`member-email-${index}`}
-                    >
+                    <label htmlFor={`member-email-${index}`}>
                       Member: {memberEmail}
                     </label>
                     <Input
