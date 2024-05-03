@@ -1,4 +1,4 @@
-## Squarify 💸
+# Squarify 💸
 Web app to track expenses - as a group. Easily manage owed dues and view past events using custom groups - with location tracking for your memories!
 
 
