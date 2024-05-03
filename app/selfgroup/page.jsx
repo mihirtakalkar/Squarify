@@ -41,6 +41,7 @@ export default function SelfGroupsPage() {
       const response = await fetch(url, { method: "GET" });
 
       if (response.ok) {
+        
         const groupData = await response.json();
 
         setAdminEmail(groupData.admin_email);
@@ -60,9 +61,9 @@ export default function SelfGroupsPage() {
 
 
     const data = { admin_email: adminEmail, id: groupId, newMembers: membersArray };
-    // console.log("Admin Email from group: ", data.admin_email);
-    // console.log("id: ", data.id);
-    // console.log("members array ", data.newMembers);
+    console.log("Admin Email from group: ", data.admin_email);
+    console.log("id: ", data.id);
+    console.log("members array ", data.newMembers);
 
     try {
       const response = await fetch('http://localhost:3000/api/group/', { // Adjust the URL to the correct API endpoint for updates
