@@ -10,11 +10,46 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
+import PayBtn from "@/components/PayBtn";
 
 const GroupPage = () => {
   const [groupId, setGroupId] = useState(null);
   const [group, setGroup] = useState(null);
   const [transactions, setTransactions] = useState([]);
+
+
+  // Function to handle marking a member as paid
+  const handlePay = async (email, groupID) => {
+    const data = { id: groupId, mem_email: email };
+
+    console.log("Handle pay is called with the email ", email, " and groupID: ", groupID);
+
+    try {
+      const response = await fetch('http://localhost:3000/api/pay/', { // Adjust the URL to the correct API endpoint for updates
+        method: 'PUT', // Change to PUT if updating
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        console.log('Paid updated successfully!');
+
+      } else {
+        const errorData = await response.json();  // Assuming the server might send back a message
+        console.error('Failed to update payment:', errorData.message);
+      }
+    } catch (error) {
+      console.error('Error updating payment:', error);
+    }
+  
+
+
+
+
+  };
+
 
   useEffect(() => {
     const pathSegments = window.location.pathname.split("/");
@@ -70,7 +105,7 @@ const GroupPage = () => {
           <Card>
             <CardHeader>
               <Link href={"/selfgroup"}>
-              <CardDescription className="scroll-m-20 text-xl font-semibold tracking-tight text-center">Add Members</CardDescription>
+                <CardDescription className="scroll-m-20 text-xl font-semibold tracking-tight text-center">Add Members</CardDescription>
               </Link>
             </CardHeader>
             <CardContent>
@@ -78,7 +113,7 @@ const GroupPage = () => {
                 {group.members.map((member, index) => (
                   <li
                     key={index}
-                    //className="text-gray-700 px-2 py-1 hover:bg-gray-100 rounded transition-colors"
+                  //className="text-gray-700 px-2 py-1 hover:bg-gray-100 rounded transition-colors"
                   >
                     {member}
                   </li>
@@ -116,12 +151,15 @@ const GroupPage = () => {
                       </CardDescription>
                       <ul className="mt-4">
                         <li className="font-semibold">Splits:</li>
-                        {transaction.members.map((member, index) => (
-                          <li key={index} className="text-sm mt-2">
-                            Email: {member.email}, Split Amount: $
-                            {member.splitAmount.toFixed(2)}
-                          </li>
-                        ))}
+                        {transaction.members.map((member, index) => {
+                          // console.log("Member:", member); // Added console log here
+                          return (
+                            <li key={index} className="text-sm mt-2">
+                              Email: {member.email}, Split Amount: ${member.splitAmount.toFixed(2)}, Paid: {member.paid.toString()}
+                              <PayBtn email={member.email} groupID={transaction.group_name} onPay={handlePay} />
+                            </li>
+                          );
+                        })}
                       </ul>
                     </div>
                     <div>

@@ -121,6 +121,7 @@ const TransactionPage = () => {
     const membersData = groupDetails.members.map((email) => ({
       email,
       splitAmount: memberSplits[email] || 0, // Default to 0 if not specified
+      // paid: false,
     }));
 
     const selectedGroupData = userGroups.find(

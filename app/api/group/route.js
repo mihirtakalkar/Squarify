@@ -21,7 +21,15 @@ export async function GET(request) {
       return NextResponse.json({ error: 'Admin email is required' }, { status: 400 });
     }
 
-    const userGroups = await Group.find({ admin_email: adminEmail });
+    const userGroups = await Group.find({
+      $or: [
+          { admin_email: adminEmail },
+          { members: adminEmail }
+      ]
+  });
+
+
+    // const userGroups = await Group.find({ admin_email: adminEmail });
     return NextResponse.json({ groups: userGroups }, { status: 200 });
   } catch (error) {
     console.error('Error fetching user groups:', error);
@@ -44,7 +52,7 @@ export async function PUT(request) {
           { _id: id },
           { 
               $push: { members: { $each: newMembers } }, // Append new members to the array
-              admin_email // Optionally update admin_email
+              // admin_email // Optionally update admin_email
           },
           { new: true, runValidators: true }
       );

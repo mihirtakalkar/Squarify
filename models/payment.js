@@ -19,7 +19,10 @@ const paymentSchema = new Schema(
         splitAmount: {
           type: Number,
           default: 0,
-        },
+        }, paid: {
+          type: Boolean,
+          default: false,
+        }
       },
     ],
     amount: {
