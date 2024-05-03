@@ -18,7 +18,7 @@ const AddGroupBtn = React.forwardRef(({ onClick, href }, ref) => {
         whileHover={{ scale: 1.1 }}
         transition={{ type: "spring", stiffness: 300 }}
       >
-        Add Group
+        Create Group
         </Button>
     );
   }

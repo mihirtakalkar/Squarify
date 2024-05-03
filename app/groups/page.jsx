@@ -35,7 +35,8 @@ export default function GroupsPage() {
     }
 
     // should also handle empty strings between commas for members
-
+    // gets rid of whitespace in members list
+    membersList = membersList.replace(/\s+/g, ''); 
     const data = {
       admin_email: session?.user?.email,
       name: groupName,
@@ -78,7 +79,7 @@ export default function GroupsPage() {
         <CardHeader>
           <CardTitle className="text-center">Create a Group</CardTitle>
           <CardDescription>
-          Enter the group name and member emails to add a new group.
+          Enter the group name and member emails to add to a new group.
           </CardDescription>
         </CardHeader>
         <CardContent>
