@@ -1,8 +1,9 @@
-## Squarify
-Web app to track expenses - as a group. Easily manage owed dues and view past events using custom groups.
+## Squarify 💸
+Web app to track expenses - as a group. Easily manage owed dues and view past events using custom groups - with location tracking for your memories!
 
 
-This application was built using [Next.js](https://nextjs.org/).
+This application was built using [Next.js](https://nextjs.org/). The backend was configured using the Mongoose and MongoDB Atlas. 
+Styling was done via Tailwin CSS and Shadcn custom components built on Radix UI. 
 
 ## Getting Started
 
@@ -12,4 +13,4 @@ First, run the development server:
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result. 🚀
